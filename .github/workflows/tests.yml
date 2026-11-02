@@ -1,0 +1,67 @@
+name: Automated tests
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: windows-latest
+    timeout-minutes: 15
+
+    defaults:
+      run:
+        shell: pwsh
+        working-directory: agentTest
+
+    steps:
+      - name: Checkout test repository
+        uses: actions/checkout@v7
+        with:
+          path: agentTest
+          persist-credentials: false
+
+      - name: Checkout product source
+        uses: actions/checkout@v7
+        with:
+          repository: lsdefine/GenericAgent
+          ref: a9a36b4b219593369de01c3e5973e56ac02e568b
+          path: agentProject
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.13.8"
+
+      - name: Install test dependencies
+        run: python -m pip install -r requirements-test.txt
+
+      - name: Check dependencies
+        run: python -m pip check
+
+      - name: Run tests and generate reports
+        run: >
+          python -m pytest tests -v
+          --junitxml=reports/junit.xml
+          --html=reports/all-tests-report.html
+          --self-contained-html
+          --cov=agent_loop
+          --cov-branch
+          --cov-report=term-missing
+          --cov-report=html:reports/coverage
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-reports
+          path: agentTest/reports/
+          if-no-files-found: warn
+          retention-days: 7
