@@ -1,0 +1,25 @@
+# Python 虚拟环境
+.venv*/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+
+# pytest 缓存
+.pytest_cache/
+
+# 覆盖率数据
+.coverage
+.coverage.*
+htmlcov/
+
+# 生成的报告
+reports/
+
+# 本地环境配置
+.env
+.env.*
+!.env.example
+
+# PyCharm 项目配置
+.idea/
