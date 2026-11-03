@@ -26,3 +26,6 @@ reports/
 
 # 下载解压的 CI 报告
 /test-reports/
+
+# 本地 E2E 工作副本
+/work/
