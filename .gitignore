@@ -23,3 +23,6 @@ reports/
 
 # PyCharm 项目配置
 .idea/
+
+# 下载解压的 CI 报告
+/test-reports/
